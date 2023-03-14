@@ -1,5 +1,9 @@
 mod library;
+mod day_2_morning;
+mod day_2_morning_excercise;
 
+use crate::day_2_morning::day2morning_entry;
+use crate::day_2_morning_excercise::day_2_run_morning_exercise;
 use crate::library::{Book, Library};
 
 fn say_hello(name: String) {
@@ -44,4 +48,10 @@ fn main() {
         Some(book) => println!("My oldest book is {book}"),
         None => println!("My library is empty!"),
     }
+    for book in library {
+        println!("Book iter {book}")
+    }
+
+    day2morning_entry();
+    day_2_run_morning_exercise();
 }

@@ -1,4 +1,5 @@
 use std::fmt::Formatter;
+use std::vec::IntoIter;
 
 pub struct Library {
     books: Vec<Book>
@@ -52,5 +53,14 @@ impl Library {
 
     pub fn oldest_book(&self) -> Option<&Book> {
         self.books.iter().min_by_key(|book| book.year)
+    }
+}
+
+impl IntoIterator for Library {
+    type Item = Book;
+    type IntoIter = IntoIter<Book>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        return self.books.into_iter();
     }
 }
