@@ -1,4 +1,5 @@
-
+use std::fmt;
+use std::ops::Add;
 
 pub fn day_2_run_morning_exercise() {
     let mut bob = User::new(String::from("Bob"), 32, 155.2);
@@ -16,10 +17,10 @@ struct User {
 
 impl User {
     pub fn new(name: String, age: u32, weight: f32) -> Self {
-        return User {name, age, weight};
+        return User { name, age, weight };
     }
     pub fn name(&self) -> &str {
-        return self.name.as_str()
+        return self.name.as_str();
     }
 
     pub fn age(&self) -> u32 {
@@ -40,34 +41,116 @@ impl User {
 }
 
 // polygon exercise
-
+#[derive(PartialEq, Debug, Clone, Copy)]
 pub struct Point {
     // add fields
+    x: i32,
+    y: i32,
 }
 
 impl Point {
     // add methods
+    pub fn new(x: i32, y: i32) -> Self {
+        return Point { x, y };
+    }
+
+    pub fn dist(self, p2: Point) -> f64 {
+        let sum = (p2.x - self.x).pow(2) + (p2.y - self.y).pow(2);
+        return (sum as f64).sqrt().abs();
+    }
+
+    pub fn magnitude(self) -> f64 {
+        return self.dist(Point::new(0, 0));
+    }
 }
 
+impl Add<Point> for Point {
+    type Output = Point;
+
+    fn add(self, rhs: Point) -> Self::Output {
+        return Point::new(self.x + rhs.x, self.y + rhs.y);
+    }
+}
+
+#[derive(PartialEq, Debug)]
 pub struct Polygon {
     // add fields
+    points: Vec<Point>,
 }
 
 impl Polygon {
     // add methods
+    pub fn new() -> Self {
+        return Polygon { points: Vec::new() };
+    }
+    pub fn add_point(&mut self, p: Point) {
+        self.points.push(p)
+    }
+
+    pub fn left_most_point<>(&self) -> Option<Point> {
+        return self.points.iter().min_by_key(|point| point.x).copied();
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item=&Point> {
+        self.points.iter()
+    }
+
+    pub fn length(&self) -> f64 {
+        if self.points.is_empty() {
+            return 0.0;
+        }
+        let mut result = 0.0;
+        let mut last_point = self.points[0];
+        for point in &self.points[1..] {
+            result += last_point.dist(*point);
+            last_point = *point;
+        }
+        result += last_point.dist(self.points[0]);
+        result
+    }
 }
 
 pub struct Circle {
     // add fields
+    center: Point,
+    radius: i32
 }
 
 impl Circle {
     // add methods
+    pub fn new(center: Point, radius: i32) -> Self {
+        return Circle { center, radius };
+    }
+
+    pub fn circumference(&self) -> f64 {
+        2.0 * std::f64::consts::PI * f64::from(self.radius)
+    }
 }
 
 pub enum Shape {
     Polygon(Polygon),
     Circle(Circle),
+}
+
+impl From<Polygon> for Shape {
+    fn from(value: Polygon) -> Self {
+        Shape::Polygon(value)
+    }
+}
+
+impl From<Circle> for Shape {
+    fn from(value: Circle) -> Self {
+        Shape::Circle(value)
+    }
+}
+
+impl Shape {
+    pub fn perimeter(&self) -> f64 {
+        match self {
+            Shape::Polygon(poly) => poly.length(),
+            Shape::Circle(circle) => circle.circumference()
+        }
+    }
 }
 
 #[cfg(test)]
