@@ -1,9 +1,12 @@
 mod library;
 mod day_2_morning;
 mod day_2_morning_excercise;
+mod day_3_morning;
+mod day_3_morning_exercises;
 
 use crate::day_2_morning::day2morning_entry;
 use crate::day_2_morning_excercise::day_2_run_morning_exercise;
+use crate::day_3_morning::day_3;
 use crate::library::{Book, Library};
 
 fn say_hello(name: String) {
@@ -54,4 +57,6 @@ fn main() {
 
     day2morning_entry();
     day_2_run_morning_exercise();
+
+    day_3();
 }
